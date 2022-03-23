@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 void main() {
   runApp(const MyApp());
@@ -39,6 +41,46 @@ class HomePageWidget extends StatefulWidget {
 class _HomePageWidgetState extends State<HomePageWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+// OpenWeather.com api key = efb52228910f94f7a93a69174c6b8130
+// api call for 7-day daily weather forecast. 
+// https://api.openweathermap.org/data/2.5/onecall?lat=33.44&lon=-94.04
+// &exclude=current,minutely,hourly,alerts&appid=47dced083ea25cf48cf2d5a4c6d50e4c
+// lat=55.68&lon=12.59 ≈ Nyhavn
+  var tempt;
+  var clouds;
+  var uvi;
+  var sunrise;
+  var sunset; 
+
+Future getWeather () async {
+  var weatherComURL = Uri.parse('https://api.openweathermap.org/data/2.5/onecall?lat=55.68&lon=12.59&exclude=current,minutely,hourly,alerts&appid=47dced083ea25cf48cf2d5a4c6d50e4c');
+  http.Response response = await http.get(weatherComURL);
+  var result = jsonDecode(response.body);
+  setState((){
+    this.clouds = result["daily"][0]['clouds'];
+    this.uvi = result["daily"][0]['uvi'];
+    this.sunrise = result["daily"][0]['sunrise'];
+    this.sunset = result["daily"][0]['sunset'];
+    this.tempt =  result["daily"][0]['temp']['day'];
+    // PRINT WEATHER DATA TO CONSOLE
+    print("clouds");
+    print(clouds);
+    print("tempt:");
+    print(tempt);
+    print("sunrise in unix time");
+    print(sunrise);
+    print("sunset in unix time");
+    print(sunset);
+    print('uvi');
+    print(uvi);
+  });
+}
+
+@override
+void initState(){
+  super.initState();
+  this.getWeather();
+}
   @override
   Widget build(BuildContext context) {
     const textStyle = TextStyle(
