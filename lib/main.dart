@@ -67,71 +67,154 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   var uvi;
   var sunrise;
   var sunset; 
+  var mood;
+  var sliderValue;
 
-Future getWeather () async {
-  var weatherComURL = Uri.parse('https://api.openweathermap.org/data/2.5/onecall?lat=55.68&lon=12.59&exclude=current,minutely,hourly,alerts&appid=47dced083ea25cf48cf2d5a4c6d50e4c');
-  http.Response response = await http.get(weatherComURL);
-  var result = jsonDecode(response.body);
-  setState((){
-    this.date = result["daily"][0]['dt'];
-    this.clouds = result["daily"][0]['clouds'];
-    this.uvi = result["daily"][0]['uvi'];
-    this.sunrise = result["daily"][0]['sunrise'];
-    this.sunset = result["daily"][0]['sunset'];
-    this.tempt =  result["daily"][0]['temp']['day'];
+  Future getWeather () async {
+    var weatherComURL = Uri.parse('https://api.openweathermap.org/data/2.5/onecall?lat=55.68&lon=12.59&exclude=current,minutely,hourly,alerts&appid=47dced083ea25cf48cf2d5a4c6d50e4c&units=metric');
+    http.Response response = await http.get(weatherComURL);
+    var result = jsonDecode(response.body);
+    setState((){
+      this.date = DateTime.fromMillisecondsSinceEpoch(result["daily"][0]['dt'] * 1000);
+      this.clouds = result["daily"][0]['clouds'];
+      this.uvi = result["daily"][0]['uvi'];
+      this.sunrise = DateTime.fromMillisecondsSinceEpoch(result["daily"][0]['sunrise'] * 1000);
+      this.sunset = DateTime.fromMillisecondsSinceEpoch(result["daily"][0]['sunset'] * 1000);
+      this.tempt =  result["daily"][0]['temp']['day'];
+      
+      // PRINT WEATHER DATA TO CONSOLE
+      print("WEATHER DATA: date=$date clouds=$clouds tempt=$tempt sunrise=$sunrise sunset=$sunset uvi=$uvi");
+    });  
+  }
+
+  Future uploadMood () async{
     // UPLOAD WEATHER DATA TO FIREBASE 
     CollectionReference moods = FirebaseFirestore.instance.collection('moods');
     moods
-      .add({'date':date, 'clouds': clouds, 'tempt':tempt, 'sunrise':sunrise, 'sunset':sunset, 'uvi':uvi})
+      .add({'date':date, 'mood':mood ,'clouds': clouds, 'tempt':tempt, 'sunrise':sunrise, 'sunset':sunset, 'uvi':uvi})
       .then((value) => print('Mood added'))
       .catchError((error) => print('Failed to add mood : $error'));
-    // PRINT WEATHER DATA TO CONSOLE
-    print("clouds");
-    print(clouds);
-    print("tempt:");
-    print(tempt);
-    print("sunrise in unix time");
-    print(sunrise);
-    print("sunset in unix time");
-    print(sunset);
-    print('uvi');
-    print(uvi);
-  });
-}
+    print('Mood uploaded');  
+  }
 
-@override
-void initState(){
-  super.initState();
-  this.getWeather();
-}
+  @override
+  void initState(){
+    super.initState();
+    this.getWeather();
+  }
   @override
   Widget build(BuildContext context) {
-    const textStyle = TextStyle(
-                fontFamily: 'Poppins',
-                color: Colors.white,
-                fontSize: 22,
-              );
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
-        backgroundColor: Color(0xFFFFB700),
+        backgroundColor: Color(0xD9FFCB30),
         automaticallyImplyLeading: false,
-        // ignore: prefer_const_constructors
         title: Text(
           'MoodRise',
-          style: textStyle,
+          style: TextStyle(
+                fontFamily: 'Poppins',
+                color: Colors.white,
+                fontSize: 22,
+              ),
         ),
         actions: [],
-        centerTitle: false,
+        centerTitle: true,
         elevation: 2,
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: Color(0xFFF1F1F0),
       body: SafeArea(
         child: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
           child: Column(
             mainAxisSize: MainAxisSize.max,
-            children: [],
+            children: [
+              Container(
+                width: double.infinity,
+                height: 100,
+                decoration: BoxDecoration(
+                  color: Color(0xFFEEEEEE),
+                ),
+              ),
+              Container(
+                width: double.infinity,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: Color(0xFFEEEEEE),
+                ),
+                child: Text(
+                  'Good evening  😌',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 20,
+                      ),
+                ),
+              ),
+              Container(
+                width: double.infinity,
+                height: 100,
+                decoration: BoxDecoration(
+                  color: Color(0xFFEEEEEE),
+                ),
+                child: Text(
+                  'How are you feeling today?',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                        fontFamily: 'Poppins',
+                        color: Color(0xFF151E55),
+                        fontSize: 30,
+                      ),
+                ),
+              ),
+              Container(
+                width: double.infinity,
+                height: 80,
+                decoration: BoxDecoration(
+                  color: Color(0xFFEEEEEE),
+                ),
+              ),
+              Container(
+                width: double.infinity,
+                height: 100,
+                decoration: BoxDecoration(
+                  color: Color(0xFFEEEEEE),
+                ),
+                child: Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(20, 0, 25, 0),
+                  child: Container(
+                    width: double.infinity,
+                    child: Slider.adaptive(
+                      activeColor: Color(0xD9FFCB30),
+                      inactiveColor: Color(0xFF9E9E9E),
+                      min: 0,
+                      max: 10,
+                      value: sliderValue ??= 5,
+                      label: sliderValue.toString(),
+                      divisions: 20,
+                      onChanged: (newValue) {
+                        setState(() => sliderValue = newValue);
+                      },
+                    ),
+                  ),
+                ),
+              ),
+              TextButton(
+                style: ButtonStyle(
+                  foregroundColor: MaterialStateProperty.all<Color>(Color(0xEC456BBA)),
+                ),
+                onPressed: () {
+                  mood = sliderValue;
+                  print('Mood updated');
+                  uploadMood();
+                },
+                child: Text('OK', 
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontFamily: 'Poppins',
+                      color: Colors.white,),
+                ),
+              ),
+            ],
           ),
         ),
       ),
