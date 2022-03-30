@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:moodrise/savedPage.dart';
 
 
 
@@ -184,11 +184,15 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-            TextButton(
+            ElevatedButton(
               style: ButtonStyle(
                 foregroundColor: MaterialStateProperty.all<Color>(Color(0xEC456BBA)),
               ),
-              onPressed: () {
+              onPressed: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SavedPage(),),
+                );
                 mood = sliderValue;
                 print('Mood updated');
                 uploadMood();

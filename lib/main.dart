@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:moodrise/homePage.dart';
 import 'insightsPage.dart';
+import 'advicePage.dart';
 
 Future main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -66,7 +64,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   final screens = [
     HomePage(),
     InsightsPage(),
-    InsightsPage() // WARNING: Should be replaces with an AdvicePage
+    AdvicePage(), // WARNING: Should be replaces with an AdvicePage
   ];
 
   @override
