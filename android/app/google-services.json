@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "275694460331",
+    "project_id": "moodrise-dtu",
+    "storage_bucket": "moodrise-dtu.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:275694460331:android:808869b82830b6278b86ee",
+        "android_client_info": {
+          "package_name": "com.example.moodrise"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "275694460331-k0dvou8cvcpperllhh8l3nui6896g1qq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnJxGbEasTLKTKRANpYmtLWirbgYPiTxE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "275694460331-k0dvou8cvcpperllhh8l3nui6896g1qq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
