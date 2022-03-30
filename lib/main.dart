@@ -3,7 +3,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-
+import 'package:moodrise/homePage.dart';
+import 'insightsPage.dart';
 
 Future main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,8 +46,6 @@ class MyApp extends StatelessWidget {
 }
 
 class HomePageWidget extends StatefulWidget {
-  // READ FILE FROM FIREBASE
-  //final Stream<QuerySnapshot> moods = FirebaseFirestore.instance.collection('moods').snapshots();
   const HomePageWidget();
 
   @override
@@ -56,52 +55,25 @@ class HomePageWidget extends StatefulWidget {
 class _HomePageWidgetState extends State<HomePageWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-// OpenWeather.com api key = efb52228910f94f7a93a69174c6b8130
-// api call for 7-day daily weather forecast. 
-// https://api.openweathermap.org/data/2.5/onecall?lat=33.44&lon=-94.04
-// &exclude=current,minutely,hourly,alerts&appid=47dced083ea25cf48cf2d5a4c6d50e4c
-// lat=55.68&lon=12.59 ≈ Nyhavn
-  var date;
-  var tempt;
-  var clouds;
-  var uvi;
-  var sunrise;
-  var sunset; 
-  var mood;
-  var sliderValue;
-
-  Future getWeather () async {
-    var weatherComURL = Uri.parse('https://api.openweathermap.org/data/2.5/onecall?lat=55.68&lon=12.59&exclude=current,minutely,hourly,alerts&appid=47dced083ea25cf48cf2d5a4c6d50e4c&units=metric');
-    http.Response response = await http.get(weatherComURL);
-    var result = jsonDecode(response.body);
-    setState((){
-      this.date = DateTime.fromMillisecondsSinceEpoch(result["daily"][0]['dt'] * 1000);
-      this.clouds = result["daily"][0]['clouds'];
-      this.uvi = result["daily"][0]['uvi'];
-      this.sunrise = DateTime.fromMillisecondsSinceEpoch(result["daily"][0]['sunrise'] * 1000);
-      this.sunset = DateTime.fromMillisecondsSinceEpoch(result["daily"][0]['sunset'] * 1000);
-      this.tempt =  result["daily"][0]['temp']['day'];
-      
-      // PRINT WEATHER DATA TO CONSOLE
-      print("WEATHER DATA: date=$date clouds=$clouds tempt=$tempt sunrise=$sunrise sunset=$sunset uvi=$uvi");
-    });  
+  int _currentPageIndex = 0;
+  
+  void _onItemTapped(int index) {
+    setState(() {
+      _currentPageIndex = index;
+    });
   }
 
-  Future uploadMood () async{
-    // UPLOAD WEATHER DATA TO FIREBASE 
-    CollectionReference moods = FirebaseFirestore.instance.collection('moods');
-    moods
-      .add({'date':date, 'mood':mood ,'clouds': clouds, 'tempt':tempt, 'sunrise':sunrise, 'sunset':sunset, 'uvi':uvi})
-      .then((value) => print('Mood added'))
-      .catchError((error) => print('Failed to add mood : $error'));
-    print('Mood uploaded');  
-  }
+  final screens = [
+    HomePage(),
+    InsightsPage(),
+    InsightsPage() // WARNING: Should be replaces with an AdvicePage
+  ];
 
   @override
   void initState(){
     super.initState();
-    this.getWeather();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -122,102 +94,32 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         elevation: 2,
       ),
       backgroundColor: Color(0xFFF1F1F0),
-      body: SafeArea(
-        child: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Container(
-                width: double.infinity,
-                height: 100,
-                decoration: BoxDecoration(
-                  color: Color(0xFFEEEEEE),
-                ),
-              ),
-              Container(
-                width: double.infinity,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: Color(0xFFEEEEEE),
-                ),
-                child: Text(
-                  'Good evening  😌',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 20,
-                      ),
-                ),
-              ),
-              Container(
-                width: double.infinity,
-                height: 100,
-                decoration: BoxDecoration(
-                  color: Color(0xFFEEEEEE),
-                ),
-                child: Text(
-                  'How are you feeling today?',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                        fontFamily: 'Poppins',
-                        color: Color(0xFF151E55),
-                        fontSize: 30,
-                      ),
-                ),
-              ),
-              Container(
-                width: double.infinity,
-                height: 80,
-                decoration: BoxDecoration(
-                  color: Color(0xFFEEEEEE),
-                ),
-              ),
-              Container(
-                width: double.infinity,
-                height: 100,
-                decoration: BoxDecoration(
-                  color: Color(0xFFEEEEEE),
-                ),
-                child: Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(20, 0, 25, 0),
-                  child: Container(
-                    width: double.infinity,
-                    child: Slider.adaptive(
-                      activeColor: Color(0xD9FFCB30),
-                      inactiveColor: Color(0xFF9E9E9E),
-                      min: 0,
-                      max: 10,
-                      value: sliderValue ??= 5,
-                      label: sliderValue.toString(),
-                      divisions: 20,
-                      onChanged: (newValue) {
-                        setState(() => sliderValue = newValue);
-                      },
-                    ),
-                  ),
-                ),
-              ),
-              TextButton(
-                style: ButtonStyle(
-                  foregroundColor: MaterialStateProperty.all<Color>(Color(0xEC456BBA)),
-                ),
-                onPressed: () {
-                  mood = sliderValue;
-                  print('Mood updated');
-                  uploadMood();
-                },
-                child: Text('OK', 
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontFamily: 'Poppins',
-                      color: Colors.white,),
-                ),
-              ),
-            ],
+      body: screens[_currentPageIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentPageIndex,
+        onTap: _onItemTapped,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.wb_sunny_rounded),
+            label: 'HomePage',
           ),
-        ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.insights),
+            label: 'Insights',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.lightbulb),
+            label: 'Advice',
+          ),
+        ],
+        selectedItemColor: Color(0xd9ffcb30),
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        iconSize: 35,
+        backgroundColor: Color(0xFFFFFFFF),
       ),
     );
   }
 }
+
+

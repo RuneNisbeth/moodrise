@@ -1,17 +1,6 @@
-/*
-import '../flutter_flow/flutter_flow_theme.dart';
-import '../flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
-class HomePageWidget extends StatefulWidget {
-  const HomePageWidget({Key key}) : super(key: key);
-
-  @override
-  _HomePageWidgetState createState() => _HomePageWidgetState();
-}
-
-class _HomePageWidgetState extends State<HomePageWidget> {
+class InsightsPage extends StatelessWidget {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -19,31 +8,39 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
-        backgroundColor: Color(0xFFFFB700),
+        backgroundColor: Color(0xFFFFCB30),
         automaticallyImplyLeading: false,
         title: Text(
-          'MoodRise',
-          style: FlutterFlowTheme.of(context).title2.override(
+          'Insights',
+          style: TextStyle(
                 fontFamily: 'Poppins',
                 color: Colors.white,
                 fontSize: 22,
               ),
         ),
         actions: [],
-        centerTitle: false,
+        centerTitle: true,
         elevation: 2,
       ),
-      backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+      backgroundColor: Color(0xFFF1F1F0),
       body: SafeArea(
         child: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
           child: Column(
             mainAxisSize: MainAxisSize.max,
-            children: [],
+            children: [
+              Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  color: Color(0xFFEEEEEE),
+                ),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 }
-*/
+
