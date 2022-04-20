@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:moodrise/homePage.dart';
+import 'package:moodrise/savedPage.dart';
 import 'insightsPage.dart';
 import 'advice_page.dart';
+import 'package:flutter/cupertino.dart';
 
 Future main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -64,7 +66,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   final screens = [
     HomePage(),
     InsightsPage(),
-    AdvicePage(), // WARNING: Should be replaces with an AdvicePage
+    AdvicePage(), 
   ];
 
   @override
@@ -74,7 +76,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return 
+    
+    Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
         backgroundColor: Color(0xD9FFCB30),
@@ -93,31 +97,53 @@ class _HomePageWidgetState extends State<HomePageWidget> {
       ),
       backgroundColor: Color(0xFFF1F1F0),
       body: screens[_currentPageIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentPageIndex,
-        onTap: _onItemTapped,
-        items: const <BottomNavigationBarItem>[
+      bottomNavigationBar: CupertinoTabScaffold(
+        backgroundColor: Color(0xFFF1F1F0),
+        tabBar: CupertinoTabBar(items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.wb_sunny_rounded),
-            label: 'HomePage',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.insights),
-            label: 'Insights',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.lightbulb),
-            label: 'Advice',
-          ),
+              icon: Icon(Icons.wb_sunny_rounded),
+              label: '', //'HomePage',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.insights),
+              label: '', //'Insights',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.lightbulb),
+              label: '', //'Advice',
+            ),
         ],
-        selectedItemColor: Color(0xd9ffcb30),
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
+        activeColor: Color(0xd9ffcb30),
         iconSize: 35,
         backgroundColor: Color(0xFFFFFFFF),
+        ), 
+        tabBuilder: (context, index) {
+          switch (index) {
+            case 0:
+              return CupertinoTabView(builder: (context) {
+                return CupertinoPageScaffold(
+                  child: HomePage(),
+                );
+              });
+            case 1:
+              return CupertinoTabView(builder: (context) {
+                return CupertinoPageScaffold(
+                  child: InsightsPage(),
+                );
+              });
+            case 2:
+              return CupertinoTabView(builder: (context) {
+                return CupertinoPageScaffold(
+                  child: AdvicePage(),
+                );
+              });
+            default: return CupertinoTabView(builder: (context) {
+                return CupertinoPageScaffold(
+                  child: HomePage(),
+                );
+              });
+          }}
       ),
     );
   }
 }
-
-

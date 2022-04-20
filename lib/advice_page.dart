@@ -5,7 +5,25 @@ class AdvicePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return Scaffold(
+      key: scaffoldKey,
+      appBar: AppBar(
+        backgroundColor: Color(0xD9FFCB30),
+        automaticallyImplyLeading: false,
+        title: Text(
+          'MoodRise',
+          style: TextStyle(
+                fontFamily: 'Poppins',
+                color: Colors.white,
+                fontSize: 22,
+              ),
+        ),
+        actions: [],
+        centerTitle: true,
+        elevation: 2,
+      ),
+      backgroundColor: Color(0xFFEEEEEE),
+      body: SafeArea(
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: SingleChildScrollView(
@@ -73,6 +91,6 @@ class AdvicePage extends StatelessWidget {
           ),
         ),
       ),
-    );
+    ));
   }
 }

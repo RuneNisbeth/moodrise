@@ -3,8 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:moodrise/savedPage.dart';
-
-
+import 'main.dart';
 
 class HomePage extends StatefulWidget {
   // READ FILE FROM FIREBASE
@@ -68,7 +67,25 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return Scaffold(
+      key: scaffoldKey,
+      appBar: AppBar(
+        backgroundColor: Color(0xD9FFCB30),
+        automaticallyImplyLeading: false,
+        title: Text(
+          'MoodRise',
+          style: TextStyle(
+                fontFamily: 'Poppins',
+                color: Colors.white,
+                fontSize: 22,
+              ),
+        ),
+        actions: [],
+        centerTitle: true,
+        elevation: 2,
+      ),
+      backgroundColor: Color(0xFFEEEEEE),
+      body: SafeArea(
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: Column(
@@ -189,14 +206,14 @@ class _HomePageState extends State<HomePage> {
                 foregroundColor: MaterialStateProperty.all<Color>(Color(0xEC456BBA)),
               ),
               onPressed: () async {
+                mood = sliderValue;
+                uploadMood();
                 await Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => SavedPage(),),
                 );
-                mood = sliderValue;
-                uploadMood();
               },
-              child: Text('OK', 
+              child: Text('Log my mood', 
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontFamily: 'Poppins',
@@ -206,6 +223,7 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
+    )
     );
   }
 }

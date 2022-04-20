@@ -112,7 +112,25 @@ class _InsightsPage extends State<InsightsPage> {
     return StreamProvider<dynamic>.value(
       value: moods, 
       initialData: 25.toString(),
-      child: SafeArea(
+      child: Scaffold(
+      key: scaffoldKey,
+      appBar: AppBar(
+        backgroundColor: Color(0xD9FFCB30),
+        automaticallyImplyLeading: false,
+        title: Text(
+          'MoodRise',
+          style: TextStyle(
+                fontFamily: 'Poppins',
+                color: Colors.white,
+                fontSize: 22,
+              ),
+        ),
+        actions: [],
+        centerTitle: true,
+        elevation: 2,
+      ),
+      backgroundColor: Color(0xFFEEEEEE),
+      body: SafeArea(
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: Column(
@@ -240,7 +258,7 @@ class _InsightsPage extends State<InsightsPage> {
             ),
           ]),
       ),
-    ),);
+    ),));
   }
 }
 

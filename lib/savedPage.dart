@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'homePage.dart';
-
 /*
 TODO: 
 1. Routing 
@@ -15,7 +14,25 @@ class SavedPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return Scaffold(
+      key: scaffoldKey,
+      appBar: AppBar(
+        backgroundColor: Color(0xD9FFCB30),
+        automaticallyImplyLeading: false,
+        title: Text(
+          'MoodRise',
+          style: TextStyle(
+                fontFamily: 'Poppins',
+                color: Colors.white,
+                fontSize: 22,
+              ),
+        ),
+        actions: [],
+        centerTitle: true,
+        elevation: 2,
+      ),
+      backgroundColor: Color(0xFFEEEEEE),
+      body: SafeArea(
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: Column(
@@ -40,7 +57,7 @@ class SavedPage extends StatelessWidget {
             Padding(
               padding: EdgeInsetsDirectional.fromSTEB(25, 25, 25, 25),
               child: Text(
-                'Your mood has already been logged today',
+                'Your mood today was logged as',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                       fontFamily: 'Poppins',
@@ -71,10 +88,12 @@ class SavedPage extends StatelessWidget {
                 backgroundColor: MaterialStateProperty.all<Color>(Color(0xFFF28C17)),
               ),
               onPressed: () async {
+                Navigator.pop(context);
+                /*
                 await Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => HomePage(),),
-                );
+                );*/
                 print('Pressed Edit mood from saved page');
               },
               
@@ -98,6 +117,7 @@ class SavedPage extends StatelessWidget {
           ]
         ),
       ),
+    ),
     );
   }
 }
