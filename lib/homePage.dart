@@ -57,7 +57,7 @@ class _HomePageState extends State<HomePage> {
       .add({'date':date, 'mood':mood ,'clouds': clouds, 'tempt':tempt, 'sunrise':sunrise, 'sunset':sunset, 'uvi':uvi})
       .then((value) => print('Mood added'))
       .catchError((error) => print('Failed to add mood : $error'));
-    print('Mood uploaded');  
+    print('Mood uploaded as $mood');  
   }
 
   @override
@@ -194,7 +194,6 @@ class _HomePageState extends State<HomePage> {
                   MaterialPageRoute(builder: (context) => SavedPage(),),
                 );
                 mood = sliderValue;
-                print('Mood updated');
                 uploadMood();
               },
               child: Text('OK', 
