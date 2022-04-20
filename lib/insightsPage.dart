@@ -7,25 +7,24 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 
-/// TODO:
-/// Statefull widget so data comes in automaticly and update the graph
+class InsightsPage extends StatefulWidget {
+  const InsightsPage();
 
+  @override
+  _InsightsPage createState() => _InsightsPage();
+}
 
-class InsightsPage extends StatelessWidget {
+class _InsightsPage extends State<InsightsPage> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  
-  static List<Mood> moodData = []; //await getMoods() ?? [];
+  static List<Mood> moodData = [];
   static List<Sun> sunData = [];
-
-
-  /*
-  Future getdata () async {
-    setState((){
-      moodData = await getMoods();
-      
-      
-    });  
-  }*/
+  
+  void _updateData(List<Mood> newMoodData, List<Sun> newSunData) {
+    setState(() {
+      moodData = newMoodData;
+      sunData = newSunData;
+    });
+  }
 
   final CollectionReference moodCollection = FirebaseFirestore.instance.collection('moods');
   // get mood stream
@@ -211,36 +210,33 @@ class InsightsPage extends StatelessWidget {
                 ),
               ),
             ),
-            ElevatedButton.icon(
-              icon: Icon(
-                Icons.cloud_download_sharp,
-              ),
-              label: Text('Download', 
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                fontFamily: 'Poppins',
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-                ),
-              ),
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Color(0xFFF28C17)),
-              ),
-              onPressed: () async {
-                //get moods
-                moodData = await getMoods();
-                sunData = await getSuns();
-                print('Sun data ');
-                print(sunData[0].sun);
-              },
-            ),
             Container(
               width: double.infinity,
               height: 25,
               decoration: BoxDecoration(
-                color: Color(0xFFFFFFFF),
+                color: Color(0xFFEEEEEE),
               ),
               child: Container()//MoodList(),
+            ),
+            ElevatedButton.icon(
+                icon: Icon(
+                  Icons.sync,
+                ),
+                label: Text('Update graph', 
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                  fontFamily: 'Poppins',
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                  ),
+                ),
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(Color(0xFFF28C17)),
+                ),
+                onPressed: () async {
+                  //get moods
+                  _updateData(await getMoods(), await getSuns());
+                },
             ),
           ]),
       ),
