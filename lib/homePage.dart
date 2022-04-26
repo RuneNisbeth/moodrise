@@ -78,6 +78,7 @@ class _HomePageState extends State<HomePage> {
                 fontFamily: 'Poppins',
                 color: Colors.white,
                 fontSize: 22,
+                fontWeight: FontWeight.w600,
               ),
         ),
         actions: [],
@@ -105,11 +106,12 @@ class _HomePageState extends State<HomePage> {
                 color: Color(0xFFEEEEEE),
               ),
               child: Text(
-                'Good evening  😌',
+                'Hi, welcome back 👋 ',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                       fontFamily: 'Poppins',
                       fontSize: 20,
+                      fontWeight: FontWeight.w600,
                     ),
               ),
             ),
@@ -126,12 +128,13 @@ class _HomePageState extends State<HomePage> {
                       fontFamily: 'Poppins',
                       color: Color(0xFF151E55),
                       fontSize: 30,
+                      fontWeight: FontWeight.w600,
                     ),
               ),
             ),
             Container(
               width: double.infinity,
-              height: 140,
+              height: 40,
               decoration: BoxDecoration(
                 color: Color(0xFFEEEEEE),
               ),
@@ -193,14 +196,146 @@ class _HomePageState extends State<HomePage> {
                     max: 10,
                     value: sliderValue ??= 5,
                     label: sliderValue.toString(),
-                    divisions: 20,
+                    divisions: 10,
                     onChanged: (newValue) {
                       setState(() => sliderValue = newValue);
                     },
                   ),
                 ),
               ),
-            ),
+            ),Container(
+                width: double.infinity,
+                height: 70,
+                decoration: BoxDecoration(
+                  color: Color(0xFFEEEEEE),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    if ((sliderValue != null))
+                      Stack(
+                        children: [
+                          if ((sliderValue) == 0.0)
+                            Text(
+                              'I couldn\'t feel wors',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                color: Color(0xFF434343),
+                                fontSize: 16,
+                                  ),
+                            ),
+                          if ((sliderValue) == 1.0)
+                            Text(
+                              'I\'m feeling terrible',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                color: Color(0xFF434343),
+                                fontSize: 16,
+                              ),
+                            ),
+                          if ((sliderValue) == 2.0)
+                            Text(
+                              'I\'m feeling very bad',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                color: Color(0xFF434343),
+                                fontSize: 16,
+                              ),
+                            ),
+                          if ((sliderValue) == 3.0)
+                            Text(
+                              'I\'m feeling bad',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                color: Color(0xFF434343),
+                                fontSize: 16,
+                              ),
+                            ),
+                          if ((sliderValue) == 4.0)
+                            Text(
+                              'I\'m feeling less than OK',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                color: Color(0xFF434343),
+                                fontSize: 16,
+                              ),
+                            ),
+                          if ((sliderValue) == 5.0)
+                            Text(
+                                'So-so',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                fontFamily: 'Poppins',
+                                color: Color(0xFF434343),
+                                fontSize: 16,
+                              ),
+                              ),
+                          if ((sliderValue) == 6.0)
+                            Text(
+                              'I\'m feeling OK',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                color: Color(0xFF434343),
+                                fontSize: 16,
+                              ),
+                            ),
+                          if ((sliderValue) == 8.0)
+                            Text(
+                              'I \'m feeling good',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                color: Color(0xFF434343),
+                                fontSize: 16,
+                              ),
+                            ),
+                          if ((sliderValue) == 7.0)
+                            Text(
+                              'I\'m feeling very good',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                color: Color(0xFF434343),
+                                fontSize: 16,
+                              ),
+                            ),
+                          if ((sliderValue) == 9.0)
+                            Text(
+                              'I \'m feeling great',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                color: Color(0xFF434343),
+                                fontSize: 16,
+                              ),
+                            ),
+                          if ((sliderValue) == 10.0)
+                            Text(
+                              'I\'m not feeling good nor bad',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                color: Color(0xFF434343),
+                                fontSize: 16,
+                              ),)
+                        ],
+                      ),
+                    Container(
+                      width: double.infinity,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: Color(0xFFEEEEEE),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ElevatedButton(
               style: ButtonStyle(
                 foregroundColor: MaterialStateProperty.all<Color>(Color(0xEC456BBA)),

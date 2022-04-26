@@ -16,6 +16,7 @@ class AdvicePage extends StatelessWidget {
                 fontFamily: 'Poppins',
                 color: Colors.white,
                 fontSize: 22,
+                fontWeight: FontWeight.w600,
               ),
         ),
         actions: [],

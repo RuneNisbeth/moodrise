@@ -18,12 +18,40 @@ class _InsightsPage extends State<InsightsPage> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   static List<Mood> moodData = [];
   static List<Sun> sunData = [];
+  DateTime today = DateTime.now();
+  DateTime startDateGraph = DateTime.now().subtract(Duration(days:7));
+  DateTime endDateGraph = DateTime.now();
+  int weekMonthYear = 0; // 1=Week, 2=Month, 3=Year
   
-  void _updateData(List<Mood> newMoodData, List<Sun> newSunData) {
+  void _previousWeekMonthYear(DateTime newEndDateGraph, DateTime newStartDateGraph){
+    if(weekMonthYear == 0){ _updateWeekMonthYear(endDateGraph.subtract(Duration(days:7)), startDateGraph.subtract(Duration(days:7))); }
+    if(weekMonthYear == 1){ _updateWeekMonthYear(endDateGraph.subtract(Duration(days:31)), startDateGraph.subtract(Duration(days:31))); }
+    if(weekMonthYear == 2){ _updateWeekMonthYear(endDateGraph.subtract(Duration(days:365)), startDateGraph.subtract(Duration(days:365))); }
+  }
+  
+  void _nextWeekMonthYear(DateTime newEndDateGraph, DateTime newStartDateGraph){
+    if(weekMonthYear == 0){ _updateWeekMonthYear(endDateGraph.add(Duration(days:7)), startDateGraph.add(Duration(days:7))); }
+    if(weekMonthYear == 1){ _updateWeekMonthYear(endDateGraph.add(Duration(days:31)), startDateGraph.add(Duration(days:31))); }
+    if(weekMonthYear == 2){ _updateWeekMonthYear(endDateGraph.add(Duration(days:365)), startDateGraph.add(Duration(days:365))); }
+  }
+
+  void _updateWeekMonthYear(DateTime newEndDateGraph, DateTime newStartDateGraph){
+    endDateGraph = newEndDateGraph;
+    startDateGraph = newStartDateGraph;
+  }
+
+  void _updateData(List<Mood> newMoodData, List<Sun> newSunData, int newWeekMonthYear) {
     setState(() {
-      moodData = newMoodData;
-      sunData = newSunData;
+      weekMonthYear = newWeekMonthYear;
+      moodData = newMoodData.where((element) => element.date.isAfter(startDateGraph) && element.date.isBefore(endDateGraph) ).toList();
+      sunData = newSunData.where((element) => element.date.isAfter(startDateGraph) && element.date.isBefore(endDateGraph) ).toList();
     });
+  }
+  
+  int daysBetween(DateTime from, DateTime to) {
+     from = DateTime(from.year, from.month, from.day);
+     to = DateTime(to.year, to.month, to.day);
+   return (to.difference(from).inHours / 24).round();
   }
 
   final CollectionReference moodCollection = FirebaseFirestore.instance.collection('moods');
@@ -51,7 +79,8 @@ class _InsightsPage extends State<InsightsPage> {
       });
       moodList.sort((Mood a, Mood b) => a.date.compareTo(b.date));
       return moodList;
-    } catch (e) { print(e.toString());
+    } catch (e) { 
+      print(e.toString());
       return moodList;
     }
   }
@@ -123,6 +152,7 @@ class _InsightsPage extends State<InsightsPage> {
                 fontFamily: 'Poppins',
                 color: Colors.white,
                 fontSize: 22,
+                fontWeight: FontWeight.w600,
               ),
         ),
         actions: [],
@@ -223,7 +253,7 @@ class _InsightsPage extends State<InsightsPage> {
                   color: Colors.white,
                 ),
                 child: Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(30, 0, 30, 30),
+                  padding: EdgeInsetsDirectional.fromSTEB(30, 0, 30, 10),
                   child: NumericComboLineBarChart(_createSampleData()),
                 ),
               ),
@@ -232,10 +262,91 @@ class _InsightsPage extends State<InsightsPage> {
               width: double.infinity,
               height: 25,
               decoration: BoxDecoration(
-                color: Color(0xFFEEEEEE),
+                color: Color(0xFFFFFFFF),
               ),
-              child: Container()//MoodList(),
+              child: Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(15, 0, 15, 0),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        IconButton(
+                          padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                          onPressed: () async {
+                            _previousWeekMonthYear(endDateGraph, startDateGraph);
+                            _updateData(await getMoods(), await getSuns(), weekMonthYear);
+                          }, 
+                          icon: Icon(
+                            Icons.arrow_left,
+                            color: Colors.black,
+                            size: 25,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () async {
+                            _previousWeekMonthYear(endDateGraph, startDateGraph);
+                            _updateData(await getMoods(), await getSuns(), weekMonthYear);
+                          }, 
+                          child: Text(
+                            ' Previous',
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              color: Colors.black,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              ),
+                          ),
+                        )
+                      ]
+                    ),
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        TextButton(
+                          onPressed: () async {
+                            _nextWeekMonthYear(endDateGraph, startDateGraph);
+                            _updateData(await getMoods(), await getSuns(), weekMonthYear);
+                          }, 
+                          child: Text(
+                            'Next ',
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              color: Colors.black,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              ),
+                          ),
+                        ), 
+                        IconButton(
+                          padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                          onPressed: () async {
+                            _nextWeekMonthYear(endDateGraph, startDateGraph);
+                            _updateData(await getMoods(), await getSuns(), weekMonthYear);
+                          }, 
+                          icon: Icon(
+                            Icons.arrow_right,
+                            color: Colors.black,
+                            size: 25,
+                          ),
+                        ),
+                      ]
+                    ),
+                  ],
+                ),
+              ),
             ),
+            Container(
+              width: double.infinity,
+              height: 10,
+              decoration: BoxDecoration(
+                color: Color(0xFFFFFFFF),
+              ),
+              child: Container()
+            ),
+            /*
             ElevatedButton.icon(
                 icon: Icon(
                   Icons.sync,
@@ -253,9 +364,76 @@ class _InsightsPage extends State<InsightsPage> {
                 ),
                 onPressed: () async {
                   //get moods
-                  _updateData(await getMoods(), await getSuns());
+                  _updateData(await getMoods(), await getSuns(), weekMonthYear);
                 },
             ),
+            */
+            Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(25, 15, 25, 0),
+                    child: ElevatedButton(
+                      child: Text('Week', 
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                        fontFamily: 'Poppins',
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(Color(0xFFF28C17)),
+                      ),
+                      onPressed: () async {
+                        _updateWeekMonthYear(today, today.subtract(Duration(days:7)));
+                        _updateData(await getMoods(), await getSuns(), 0);
+                      },
+                  ),
+                ), 
+                Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(25, 15, 25, 0),
+                    child: ElevatedButton(
+                      child: Text('Month', 
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                        fontFamily: 'Poppins',
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(Color(0xFFF28C17)),
+                      ),
+                      onPressed: () async {
+                        _updateWeekMonthYear(today, today.subtract(Duration(days:31)));
+                        _updateData(await getMoods(), await getSuns(), 1);
+                      },
+                  ),
+                ),
+                Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(25, 15, 25, 0),
+                    child: ElevatedButton(
+                      child: Text('Year', 
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                        fontFamily: 'Poppins',
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(Color(0xFFF28C17)),
+                      ),
+                      onPressed: () async {
+                        _updateWeekMonthYear(today, today.subtract(Duration(days:365)));
+                        _updateData(await getMoods(), await getSuns(), 2);
+                      },
+                  ),
+                ),
+              ]),   
           ]),
       ),
     ),));

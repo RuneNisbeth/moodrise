@@ -89,6 +89,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                 fontFamily: 'Poppins',
                 color: Colors.white,
                 fontSize: 22,
+                fontWeight: FontWeight.w600,
               ),
         ),
         actions: [],
