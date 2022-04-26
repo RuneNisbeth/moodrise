@@ -10,12 +10,15 @@ TODO:
 
 
 class SavedPage extends StatelessWidget {
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+  final int sliderValue;
+
+  const SavedPage({
+    required this.sliderValue
+  });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: scaffoldKey,
       appBar: AppBar(
         backgroundColor: Color(0xD9FFCB30),
         automaticallyImplyLeading: false,
@@ -47,12 +50,13 @@ class SavedPage extends StatelessWidget {
               ),
             ),
             Text(
-              'Good evening  😌',
+              'Good evening!',
               textAlign: TextAlign.center,
               style: TextStyle(
                     fontFamily: 'Poppins',
                     color: Color(0xFF151E55),
                     fontSize: 20,
+                    fontWeight: FontWeight.w600,
                   ),
             ),
             Padding(
@@ -64,16 +68,26 @@ class SavedPage extends StatelessWidget {
                       fontFamily: 'Poppins',
                       color: Color(0xFF151E55),
                       fontSize: 30,
+                      fontWeight: FontWeight.w600,
                 ),
               ),
             ),
-
-            
-            
-            // TODO: Slider value
-
-
-
+            Text(
+              '$sliderValue',
+              style: TextStyle(
+                    fontFamily: 'Poppins',
+                    color: Color(0xFF151E55),
+                    fontSize: 45,
+                    fontWeight: FontWeight.w600,
+                  ),
+            ),
+            Container(
+              width: double.infinity,
+              height: 50,
+              decoration: BoxDecoration(
+                color: Color(0xFFEEEEEE),
+              ),
+            ),
             ElevatedButton.icon(
               icon: Icon(
                 Icons.edit,
@@ -82,38 +96,18 @@ class SavedPage extends StatelessWidget {
               label: Text('Edit', 
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                fontFamily: 'Poppins',
-                color: Colors.white,),
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
               ),
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(Color(0xFFF28C17)),
               ),
               onPressed: () async {
                 Navigator.pop(context);
-                /*
-                await Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => HomePage(),),
-                );*/
                 print('Pressed Edit mood from saved page');
               },
-              
-              /*
-              child: Row(
-                children: const <Widget>[
-                  Icon(
-                    Icons.edit
-                  ),
-                  Text('Edit', 
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                    fontFamily: 'Poppins',
-                    color: Colors.white,),
-                  ),
-                ]
-              ),
-              */
-
             ),
           ]
         ),

@@ -7,6 +7,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 
+/// TO DO 
+/// * Hardcoded month (31 days) and year (365 days)
+/// * Look 7 or 31 or 365 days back insted of Whats in week 33, April og 2022
+/// * 
+
 class InsightsPage extends StatefulWidget {
   const InsightsPage();
 
@@ -46,12 +51,6 @@ class _InsightsPage extends State<InsightsPage> {
       moodData = newMoodData.where((element) => element.date.isAfter(startDateGraph) && element.date.isBefore(endDateGraph) ).toList();
       sunData = newSunData.where((element) => element.date.isAfter(startDateGraph) && element.date.isBefore(endDateGraph) ).toList();
     });
-  }
-  
-  int daysBetween(DateTime from, DateTime to) {
-     from = DateTime(from.year, from.month, from.day);
-     to = DateTime(to.year, to.month, to.day);
-   return (to.difference(from).inHours / 24).round();
   }
 
   final CollectionReference moodCollection = FirebaseFirestore.instance.collection('moods');

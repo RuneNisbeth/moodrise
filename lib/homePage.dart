@@ -5,6 +5,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:moodrise/savedPage.dart';
 import 'main.dart';
 
+/// TO DO
+/// * Only allow 1 upload per day.
+
 class HomePage extends StatefulWidget {
   // READ FILE FROM FIREBASE
   //final Stream<QuerySnapshot> moods = FirebaseFirestore.instance.collection('moods').snapshots();
@@ -336,23 +339,27 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
-            ElevatedButton(
+            ElevatedButton.icon(
+              icon: Icon(
+                Icons.save_alt_rounded,
+              ),
               style: ButtonStyle(
-                foregroundColor: MaterialStateProperty.all<Color>(Color(0xEC456BBA)),
+                backgroundColor: MaterialStateProperty.all<Color>(Color(0xFFF28C17)),
               ),
               onPressed: () async {
                 mood = sliderValue;
                 uploadMood();
                 await Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => SavedPage(),),
+                  MaterialPageRoute(builder: (context) => SavedPage(sliderValue: sliderValue,),),
                 );
               },
-              child: Text('Log my mood', 
+              label: Text('Log my mood', 
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontFamily: 'Poppins',
-                    color: Colors.white,),
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600),
               ),
             ),
           ],
