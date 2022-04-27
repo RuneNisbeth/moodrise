@@ -6,7 +6,6 @@ import 'package:moodrise/savedPage.dart';
 import 'main.dart';
 
 /// TO DO
-/// * Only allow 1 upload per day.
 
 class HomePage extends StatefulWidget {
   // READ FILE FROM FIREBASE
@@ -234,7 +233,7 @@ class _HomePageState extends State<HomePage> {
                         children: [
                           if ((sliderValue) == 0.0)
                             Text(
-                              'I couldn\'t feel wors',
+                              'I couldn\'t feel worse',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontFamily: 'Poppins',
@@ -302,9 +301,9 @@ class _HomePageState extends State<HomePage> {
                                 fontSize: 16,
                               ),
                             ),
-                          if ((sliderValue) == 8.0)
+                          if ((sliderValue) == 7.0)
                             Text(
-                              'I \'m feeling good',
+                              'I\'m feeling good',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontFamily: 'Poppins',
@@ -312,7 +311,7 @@ class _HomePageState extends State<HomePage> {
                                 fontSize: 16,
                               ),
                             ),
-                          if ((sliderValue) == 7.0)
+                          if ((sliderValue) == 8.0)
                             Text(
                               'I\'m feeling very good',
                               textAlign: TextAlign.center,
@@ -324,7 +323,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                           if ((sliderValue) == 9.0)
                             Text(
-                              'I \'m feeling great',
+                              'I\'m feeling great',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontFamily: 'Poppins',
@@ -334,7 +333,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                           if ((sliderValue) == 10.0)
                             Text(
-                              'I\'m not feeling good nor bad',
+                              'I\'m feeling really great',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontFamily: 'Poppins',

@@ -8,9 +8,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 
 /// TO DO 
-/// * Hardcoded month (31 days) and year (365 days)
 /// * Look 7 or 31 or 365 days back insted of Whats in week 33, April og 2022
-/// * 
+/// * Average data to weeks and months in year view and month view. 
+/// * Make easier to see the dates. MON, TUE, WED, THU, FRI or make the y-ticks right below the datapoints.
+/// * Hardcoded month (31 days) and year (365 days)
+/// * Limit mood axis to 10 in graph.
+
 
 class InsightsPage extends StatefulWidget {
   const InsightsPage();
@@ -23,11 +26,36 @@ class _InsightsPage extends State<InsightsPage> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   static List<Mood> moodData = [];
   static List<Sun> sunData = [];
-  DateTime today = DateTime.now();
-  DateTime startDateGraph = DateTime.now().subtract(Duration(days:7));
-  DateTime endDateGraph = DateTime.now();
+  DateTime today = DateTime.utc(DateTime.now().year, DateTime.now().month, DateTime.now().day, 23, 59, 59);
+  static DateTime startDateGraph = DateTime.now().subtract(Duration(days:7));
+  static DateTime endDateGraph = DateTime.now();
   int weekMonthYear = 0; // 1=Week, 2=Month, 3=Year
   
+  
+  _initGetMoodsAndSuns() async {
+    List<Mood> justMoodData = await getMoods();
+    List<Sun> justSunData = await getSuns();
+    setState(() {
+      weekMonthYear = weekMonthYear;
+      moodData = justMoodData.where((element) => element.date.isAfter(startDateGraph) && element.date.isBefore(endDateGraph) ).toList();
+      sunData = justSunData.where((element) => element.date.isAfter(startDateGraph) && element.date.isBefore(endDateGraph) ).toList();
+    });
+  }
+
+  _initGetSuns() async {
+    return getSuns();
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState getMoods(), await getSuns()
+    super.initState();
+    _initGetMoodsAndSuns();
+  }
+  
+
+
+
   void _previousWeekMonthYear(DateTime newEndDateGraph, DateTime newStartDateGraph){
     if(weekMonthYear == 0){ _updateWeekMonthYear(endDateGraph.subtract(Duration(days:7)), startDateGraph.subtract(Duration(days:7))); }
     if(weekMonthYear == 1){ _updateWeekMonthYear(endDateGraph.subtract(Duration(days:31)), startDateGraph.subtract(Duration(days:31))); }
@@ -102,7 +130,7 @@ class _InsightsPage extends State<InsightsPage> {
 
   
   static List<charts.Series<dynamic, DateTime>> _createSampleData() {
-    // DUMMY DATA 
+    // DUMMY DATA NOT USED
     final latest_mood_dummy = [
       new Mood(DateTime.utc(2022, 4, 16) , 1),  new Mood(DateTime.utc(2022, 4, 15) , 5),
       new Mood(DateTime.utc(2022, 4, 14) , 5),  new Mood(DateTime.utc(2022, 4, 13) , 6),
@@ -112,7 +140,7 @@ class _InsightsPage extends State<InsightsPage> {
       new Sun(DateTime.utc(2022, 4, 14) , 1),   new Sun(DateTime.utc(2022, 4, 13) , 3),
       new Sun(DateTime.utc(2022, 4, 12) , 5),   new Sun(DateTime.utc(2022, 4, 11) , 4),
     ];
-
+    
     return [
       // ignore: unnecessary_new
       new charts.Series<Mood, DateTime>(
@@ -121,7 +149,12 @@ class _InsightsPage extends State<InsightsPage> {
         domainFn: (Mood mood, _) => mood.date, //mode.date
         measureFn: (Mood mood, _) => mood.mood,
         data: moodData,
+        domainLowerBoundFn: (s, _) => startDateGraph, 
+        domainUpperBoundFn: (s, _) => endDateGraph, 
+        //measureLowerBoundFn: (s, _) => 0, 
+        //measureUpperBoundFn: (s, _) => 10, 
       ) // Configure our custom bar renderer for this series.
+      //..setAttribute(charts.AxisSpec, new charts.AxisSpec())
       ..setAttribute(charts.measureAxisIdKey, 'secondaryMeasureAxisId'),
         
       new charts.Series<Sun, DateTime>(
@@ -130,8 +163,13 @@ class _InsightsPage extends State<InsightsPage> {
         domainFn: (Sun sun, _) => sun.date, //sun.date
         measureFn: (Sun sun, _) => sun.sun,
         data: sunData,
+        domainLowerBoundFn: (s, _) => startDateGraph, 
+        domainUpperBoundFn: (s, _) => endDateGraph, 
+        //measureLowerBoundFn: (s, _) => startDateGraph, 
+        //measureUpperBoundFn: (s, _) => endDateGraph, 
       )
       ..setAttribute(charts.rendererIdKey, 'customBar'),
+      //..setAttribute(charts.SeriesRenderer.defaultRendererId, '')
     ];
   }
 
@@ -253,7 +291,10 @@ class _InsightsPage extends State<InsightsPage> {
                 ),
                 child: Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(30, 0, 30, 10),
-                  child: NumericComboLineBarChart(_createSampleData()),
+                  child: NumericComboLineBarChart(
+                    _createSampleData(),
+                    
+                  ),
                 ),
               ),
             ),
