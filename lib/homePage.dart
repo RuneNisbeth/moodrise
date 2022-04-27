@@ -20,6 +20,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  CollectionReference moods = FirebaseFirestore.instance.collection('moods');
+
   var date;
   var tempt;
   var clouds;
@@ -53,15 +55,27 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future uploadMood () async{
-    // UPLOAD WEATHER DATA TO FIREBASE 
-    CollectionReference moods = FirebaseFirestore.instance.collection('moods');
-    moods
+    // CREATE A TODAY TIMESTAMP TO MATCH WITH RECORDS IN DATABASE
+    DateTime now = DateTime.now();
+    DateTime today = DateTime.utc(now.year, now.month, now.day, 00, 00, 00);
+    Timestamp timestamp = Timestamp.fromDate(today);
+    
+    // GET DOCUMENTS
+    QuerySnapshot todaysDocuments = await moods.where('date', isGreaterThan: timestamp).get();
+    
+    // CHECK IF THERE ALREADY EXIST A DOCUMENT FOR TODAY
+    if(todaysDocuments.docs.isEmpty){ // if not then upload
+      moods
       .add({'date':date, 'mood':mood ,'clouds': clouds, 'tempt':tempt, 'sunrise':sunrise, 'sunset':sunset, 'uvi':uvi})
       .then((value) => print('Mood added'))
       .catchError((error) => print('Failed to add mood : $error'));
-    print('Mood uploaded as $mood');  
+      print('Mood uploaded as $mood');
+    }
+    else{ // If document exist for today then update mood
+      todaysDocuments.docs[0].reference.update({'mood':mood});
+    }
   }
-
+  
   @override
   void initState(){
     super.initState();

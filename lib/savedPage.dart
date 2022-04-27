@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
 import 'homePage.dart';
-/*
-TODO: 
-1. Routing 
-2. SliderValue
-3. Edit button to go back to mood logger "HomePage"
-4. 
-*/
+
+/// TO DO: 
 
 
 class SavedPage extends StatelessWidget {
