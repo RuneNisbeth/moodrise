@@ -41,7 +41,7 @@ class _HomePageState extends State<HomePage> {
     http.Response response = await http.get(weatherComURL);
     var result = jsonDecode(response.body);
     setState((){
-      this.date = DateTime.fromMillisecondsSinceEpoch(result["daily"][0]['dt'] * 1000);
+      this.date = DateTime.fromMillisecondsSinceEpoch(result["daily"][0]['dt'] * 1000).subtract(Duration(hours:13)); // subtract 13 hours to make midnight
       this.clouds = result["daily"][0]['clouds'];
       this.uvi = result["daily"][0]['uvi'];
       this.sunrise = DateTime.fromMillisecondsSinceEpoch(result["daily"][0]['sunrise'] * 1000);

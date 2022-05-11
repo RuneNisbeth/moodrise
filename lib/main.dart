@@ -27,6 +27,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         // This is the theme of your application.
@@ -97,7 +98,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         elevation: 2,
       ),
       backgroundColor: Color(0xFFF1F1F0),
-      body: screens[_currentPageIndex],
+      body: Container(),//screens[_currentPageIndex],
       bottomNavigationBar: CupertinoTabScaffold(
         backgroundColor: Color(0xFFF1F1F0),
         tabBar: CupertinoTabBar(items: [
